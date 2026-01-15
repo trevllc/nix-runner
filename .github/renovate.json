@@ -20,7 +20,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": ["^Dockerfile$"],
       "matchStrings": [
         "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<depName>.*?)\\s"
       ],
@@ -29,7 +29,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": ["^Dockerfile$"],
       "matchStrings": [
         "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # github-tags/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s"
       ],
