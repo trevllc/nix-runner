@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-global-schema.json",
+
+  // self-hosted
+  "onboarding": false,
+  "requireConfig": "ignored",
+  "platform": "github",
+  "repositories": ["trevllc/nix-runner"],
+
+  // repository
+  "extends": ["config:recommended"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "schedule": ["* * * * 0"] // sunday
+  },
+  "nix": {
+    "enabled": true
+  },
+  "customManagers": [
+    {
+      "description": "nix installer",
+      "customType": "regex",
+      "managerFilePatterns": ["^Dockerfile$"],
+      "matchStrings": [
+        "DeterminateSystems\\/nix-installer\\/releases\\/download\\/(?<currentValue>.+)\\/nix-installer-x86_64-linux"
+      ],
+      "packageNameTemplate": "DeterminateSystems/nix-installer",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "description": "actions runner",
+      "customType": "regex",
+      "managerFilePatterns": ["^Dockerfile$"],
+      "matchStrings": [
+        "actions\\/runner\\/releases\\/download\\/(?<currentValue>.+)\\/actions-runner-linux-x64-.*\\.tar\\.gz"
+      ],
+      "packageNameTemplate": "actions/runner",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "Nix Inputs",
+      "matchManagers": ["nix"]
+    },
+    {
+      "groupName": "Docker Images",
+      "matchManagers": ["custom.regex"],
+      "matchDepTypes": ["image"],
+      "pinDigests": true
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"]
+    }
+  ]
+}

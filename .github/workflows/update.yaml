@@ -1,0 +1,32 @@
+name: update
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # every day at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  renovate:
+    runs-on: nix
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: spotdemo4/better-checkout@fbd1d9e60d4d4c5c9efb2244c052cac648d62944 # v0.1.1
+        with:
+          app-id: ${{ vars.RENOVATE_ID }}
+          private-key: ${{ secrets.RENOVATE_KEY }}
+
+      - name: Nix develop
+        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
+        with:
+          arguments: ".#update"
+
+      - name: Renovate
+        run: renovate
+        env:
+          RENOVATE_CONFIG_FILE: .github/renovate.json
+          RENOVATE_TOKEN: ${{ steps.checkout.outputs.token }}
+          LOG_LEVEL: ${{ runner.debug == '1' && 'debug' || 'info' }}

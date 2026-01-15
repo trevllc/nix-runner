@@ -30,9 +30,6 @@ cleanup () {
         echo "Creating backup..."
         nix nario export --format 2 --all > /backup/system.nario
     fi
-
-    echo "Uninstalling Nix..."
-    /nix/nix-installer uninstall --no-confirm
 }
 
 if [[ ! -v TOKEN ]]; then

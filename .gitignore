@@ -1,2 +1,6 @@
 .env
 /backup
+
+# nix
+/result*
+/.direnv/
