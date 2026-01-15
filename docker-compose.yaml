@@ -1,0 +1,10 @@
+name: nix-runner
+services:
+  nix-runner:
+    build: .
+    volumes:
+      - ./backup:/backup
+    environment:
+      - ORG=trevllc
+      - TOKEN=${GITHUB_TOKEN}
+    restart: unless-stopped

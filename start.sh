@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
 get_token () {
-    curl -L \
-        -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/${REPO}/actions/runners/registration-token" | jq -r .token
+    if [[ -v REPO ]]; then
+        curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${REPO}/actions/runners/registration-token" | jq -r .token
+    elif [[ -v ORG ]]; then
+        curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/orgs/${ORG}/actions/runners/registration-token" | jq -r .token
+    else
+        echo "Either REPO or ORG environment variable must be set." >&2
+        exit 1
+    fi
 }
 
 cleanup () {
@@ -23,6 +35,11 @@ cleanup () {
     /nix/nix-installer uninstall --no-confirm
 }
 
+if [[ ! -v TOKEN ]]; then
+    echo "TOKEN environment variable must be set." >&2
+    exit 1
+fi
+
 trap 'cleanup' SIGTERM
 
 if [[ -f /backup/system.nario ]]; then
@@ -30,7 +47,7 @@ if [[ -f /backup/system.nario ]]; then
   nix nario import --no-check-sigs < /backup/system.nario
 fi
 
-./config.sh --url "https://github.com/${REPO}" --token "$(get_token)" --labels nix
+./config.sh --url "https://github.com/${REPO:-$ORG}" --token "$(get_token)" --labels nix
 ./run.sh &
 wait $!
 
