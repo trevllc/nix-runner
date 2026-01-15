@@ -1,18 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-global-schema.json",
-
-  // self-hosted
   "onboarding": false,
   "requireConfig": "ignored",
   "platform": "github",
-  "repositories": ["trevllc/nix-runner"],
-
-  // repository
-  "extends": ["config:recommended"],
+  "repositories": [
+    "trevllc/nix-runner"
+  ],
+  "extends": [
+    "config:recommended"
+  ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "schedule": ["* * * * 0"] // sunday
+    "schedule": [
+      "* * * * 0"
+    ]
   },
   "nix": {
     "enabled": true
@@ -20,7 +22,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<depName>.*?)\\s"
       ],
@@ -29,7 +33,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # github-tags/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s"
       ],
@@ -38,16 +44,25 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
     },
     {
       "groupName": "Nix Inputs",
-      "matchManagers": ["nix"]
+      "matchManagers": [
+        "nix"
+      ]
     },
     {
       "groupName": "GitHub Actions",
-      "matchManagers": ["github-actions"]
+      "matchManagers": [
+        "github-actions"
+      ]
     }
   ]
 }
