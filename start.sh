@@ -45,7 +45,7 @@ if [[ -f /backup/system.nario ]]; then
   nix nario import --no-check-sigs < /backup/system.nario
 fi
 
-./config.sh --url "https://github.com/${REPO:-$ORG}" --token "$(get_token)" --labels nix
+./config.sh --unattended --disableupdate --url "https://github.com/${REPO:-$ORG}" --token "$(get_token)" --labels nix
 ./run.sh &
 wait $!
 

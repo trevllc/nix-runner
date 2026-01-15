@@ -43,5 +43,11 @@ RUN curl -o actions-runner-x86_64-linux.tar.gz -L "https://github.com/actions/ru
     rm ./actions-runner-x86_64-linux.tar.gz
 ENV RUNNER_ALLOW_RUNASROOT=1
 
+COPY ./before.sh /before.sh
+ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/before.sh
+
+COPY ./after.sh /after.sh
+ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/after.sh
+
 COPY ./start.sh /start.sh
 ENTRYPOINT [ "/start.sh" ]
