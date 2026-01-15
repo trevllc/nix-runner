@@ -17,5 +17,8 @@ jobs:
   check:
     runs-on: nix
     steps:
-      - name: Run checks
+      - name: Checkout
+        uses: spotdemo4/better-checkout@fbd1d9e60d4d4c5c9efb2244c052cac648d62944 # v0.1.1
+
+      - name: Check
         run: nix flake check
