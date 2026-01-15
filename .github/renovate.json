@@ -25,7 +25,7 @@
         "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<depName>.*?)\\s"
       ],
       "datasourceTemplate": "deb",
-      "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite=noble&components=main&binaryArch=amd64"
+      "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite=noble&components=main,universe&binaryArch=amd64"
     },
     {
       "customType": "regex",
