@@ -19,24 +19,21 @@
   },
   "customManagers": [
     {
-      "description": "nix installer",
       "customType": "regex",
-      "managerFilePatterns": ["^Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "DeterminateSystems\\/nix-installer\\/releases\\/download\\/(?<currentValue>.+)\\/nix-installer-x86_64-linux"
+        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<depName>.*?)\\s"
       ],
-      "packageNameTemplate": "DeterminateSystems/nix-installer",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "deb",
+      "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite=noble&components=main&binaryArch=amd64"
     },
     {
-      "description": "actions runner",
       "customType": "regex",
-      "managerFilePatterns": ["^Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "actions\\/runner\\/releases\\/download\\/(?<currentValue>.+)\\/actions-runner-linux-x64-.*\\.tar\\.gz"
+        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # github-tags/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s"
       ],
-      "packageNameTemplate": "actions/runner",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-tags"
     }
   ],
   "packageRules": [
@@ -47,12 +44,6 @@
     {
       "groupName": "Nix Inputs",
       "matchManagers": ["nix"]
-    },
-    {
-      "groupName": "Docker Images",
-      "matchManagers": ["custom.regex"],
-      "matchDepTypes": ["image"],
-      "pinDigests": true
     },
     {
       "groupName": "GitHub Actions",

@@ -29,6 +29,7 @@ cleanup () {
     if [[ -d /backup ]]; then
         echo "Creating backup..."
         nix nario export --format 2 --all > /backup/system.nario
+        echo "Backup created at /backup/system.nario"
     fi
 }
 
