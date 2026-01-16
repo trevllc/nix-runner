@@ -17,6 +17,7 @@ echo "$$" > ./runner.fifo
     --replace \
     --unattended \
     --disableupdate \
+    --no-default-labels \
     --token "$(/runner/token "${name}")" \
     --url "https://github.com/${name}" \
     --name "${RUNNER_NAME:-nix}" \
