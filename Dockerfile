@@ -24,7 +24,7 @@ RUN apt-get update && \
         git=${GIT_VERSION} \
         jq=${JQ_VERSION} \
         gh=${GH_VERSION} \
-        ca-certificates=${CA_CERTIFICATES_VERSION} \
+        ca-certificates=${CA_CERTIFICATES_VERSION} && \
     rm -rf /var/lib/apt/lists/*
 
 # Nix
