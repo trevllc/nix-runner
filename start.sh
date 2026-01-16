@@ -9,7 +9,7 @@ run () {
         --disableupdate \
         --token "${1}" \
         --url "https://github.com/${2}" \
-        --name "$(hostname)-${3}" \
+        --name "nix-${3}" \
         --labels nix
     ./run.sh
 }

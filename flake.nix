@@ -115,7 +115,9 @@
             deps = with pkgs; [
               renovate
             ];
-            script = "renovate-config-validator renovate.json";
+            script = ''
+              renovate-config-validator renovate.json
+            '';
           };
 
           nix = {
