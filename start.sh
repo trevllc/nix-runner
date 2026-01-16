@@ -42,9 +42,11 @@ get_token () {
 
 cleanup () {
     echo "Cleaning up..."
+    pids=()
     token="$(get_token)"
     for i in {1..5}; do
-        runuser -u "runner$i" -- bash -c "$(declare -f remove); remove ${token}"
+        runuser -u "runner$i" -- bash -c "$(declare -f remove); remove ${token}" &
+        pids+=("$!")
     done
 
     if [[ -d /backup ]]; then
@@ -52,6 +54,10 @@ cleanup () {
         nix nario export --format 2 --all > /backup/system.nario
         echo "Backup created at /backup/system.nario"
     fi
+
+    for pid in "${pids[@]}"; do
+        wait "$pid"
+    done
 }
 
 if [[ ! -v RUNNER_TOKEN ]]; then
@@ -60,6 +66,9 @@ if [[ ! -v RUNNER_TOKEN ]]; then
 fi
 
 trap 'cleanup' SIGTERM
+
+echo "Starting nix-daemon..."
+nix-daemon &
 
 if [[ -f /backup/system.nario ]]; then
   echo "Restoring backup..."

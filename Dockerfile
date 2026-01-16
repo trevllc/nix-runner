@@ -33,6 +33,7 @@ RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems
     ./nix-installer-x86_64-linux install linux \
         --extra-conf "sandbox = false" \
         --extra-conf "accept-flake-config = true" \
+        --extra-conf "always-allow-substitutes = true" \
         --no-start-daemon \
         --no-confirm && \
     rm ./nix-installer-x86_64-linux
