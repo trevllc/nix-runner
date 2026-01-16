@@ -8,6 +8,14 @@ backup () {
     echo "Backup created at /backup/${ts}.nario"
 }
 
+clean () {
+    while [ "$(find . | wc -l)" -gt 5 ]; do
+        oldest=$(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n | head -1)
+        echo "Removing oldest backup: ${oldest}"
+        rm -f "${oldest}"
+    done
+}
+
 cleanup () {
     echo "Shutting down backup service..."
     echo "exit" > "${timer}"
@@ -27,7 +35,8 @@ if [[ -f "${newest}" ]]; then
     fi
 fi
 
-echo "Waiting for backup ticks..."
+clean
+
 while true; do
     if read -r tick < "${timer}"; then
         backup
@@ -37,13 +46,7 @@ while true; do
             break
         fi
 
-        while [ "$(find . | wc -l)" -gt 5 ]; do
-            oldest=$(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n | head -1)
-            echo "Removing oldest backup: ${oldest}"
-            rm -f "${oldest}"
-        done
+        clean
     fi
 done &
 wait "$!"
-
-echo "Backup service has shut down."
