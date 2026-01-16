@@ -5,6 +5,8 @@ services:
     volumes:
       - ./backup:/backup
     environment:
-      - RUNNER_ORG=trevllc
-      - RUNNER_TOKEN=${GITHUB_TOKEN}
+      - ORG_TOKEN=${ORG_TOKEN}
+      - REPO_TOKEN=${REPO_TOKEN}
+    command: ["trevllc", "spotdemo4/go-template"]
     restart: no
+    stop_grace_period: 30s

@@ -94,6 +94,19 @@
             '';
           };
 
+          shell = {
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.fileFilter (file: file.hasExt "sh") ./.;
+            };
+            deps = with pkgs; [
+              shellcheck
+            ];
+            script = ''
+              shellcheck **/*.sh
+            '';
+          };
+
           docker = {
             src = fs.toSource {
               root = ./.;

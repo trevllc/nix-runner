@@ -51,5 +51,9 @@ RUN curl -o actions-runner-x86_64-linux.tar.gz -L "https://github.com/actions/ru
     ./bin/installdependencies.sh && \
     rm ./actions-runner-x86_64-linux.tar.gz
 
-COPY ./start.sh /start
-ENTRYPOINT [ "/start" ]
+COPY ./runner/timer.sh /runner/timer
+COPY ./runner/token.sh /runner/token
+COPY ./runner/run.sh /runner/run
+COPY ./runner/backup.sh /runner/backup
+COPY ./runner/start.sh /runner/start
+ENTRYPOINT [ "/runner/start" ]
