@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  flake:
+  nix:
     runs-on: nix
     steps:
       - name: Checkout
@@ -22,3 +22,17 @@ jobs:
 
       - name: Run flake-checker
         run: flake-checker -f
+
+  actions:
+    runs-on: nix
+    steps:
+      - name: Checkout
+        uses: spotdemo4/better-checkout@fbd1d9e60d4d4c5c9efb2244c052cac648d62944 # v0.1.1
+
+      - name: Nix develop
+        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
+        with:
+          arguments: ".#vulnerable"
+
+      - name: Run octoscan
+        run: octoscan scan --verbose .github
