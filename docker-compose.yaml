@@ -5,6 +5,6 @@ services:
     volumes:
       - ./backup:/backup
     environment:
-      - ORG=trevllc
-      - TOKEN=${GITHUB_TOKEN}
-    restart: unless-stopped
+      - RUNNER_ORG=trevllc
+      - RUNNER_TOKEN=${GITHUB_TOKEN}
+    restart: no

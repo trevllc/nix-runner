@@ -22,10 +22,10 @@
       "customType": "regex",
       "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
-        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<depName>.*?)\\s"
+        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<suite>.*?)/(?<depName>.*?)\\s"
       ],
       "datasourceTemplate": "deb",
-      "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite=noble&components=main,universe&binaryArch=amd64"
+      "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite={{suite}}&components=main,universe&binaryArch=amd64"
     },
     {
       "customType": "regex",

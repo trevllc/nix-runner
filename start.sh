@@ -1,21 +1,39 @@
 #!/usr/bin/env bash
 set -e
 
+run () {
+    cd || exit 1
+    ./config.sh \
+        --unattended \
+        --disableupdate \
+        --token "${1}" \
+        --url "https://github.com/${2}" \
+        --name "$(hostname)-${3}" \
+        --labels nix
+    ./run.sh
+}
+
+remove () {
+    cd || exit 1
+    ./config.sh remove \
+        --token "${1}"
+}
+
 get_token () {
-    if [[ -v REPO ]]; then
+    if [[ -v RUNNER_REPO ]]; then
         curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Authorization: Bearer ${RUNNER_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${REPO}/actions/runners/registration-token" | jq -r .token
-    elif [[ -v ORG ]]; then
+            "https://api.github.com/repos/${RUNNER_REPO}/actions/runners/registration-token" | jq -r .token
+    elif [[ -v RUNNER_ORG ]]; then
         curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Authorization: Bearer ${RUNNER_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/orgs/${ORG}/actions/runners/registration-token" | jq -r .token
+            "https://api.github.com/orgs/${RUNNER_ORG}/actions/runners/registration-token" | jq -r .token
     else
         echo "Either REPO or ORG environment variable must be set." >&2
         exit 1
@@ -24,7 +42,10 @@ get_token () {
 
 cleanup () {
     echo "Cleaning up..."
-    ./config.sh remove --token "$(get_token)"
+    token="$(get_token)"
+    for i in {1..5}; do
+        runuser -u "runner$i" -- bash -c "$(declare -f remove); remove ${token}"
+    done
 
     if [[ -d /backup ]]; then
         echo "Creating backup..."
@@ -33,8 +54,8 @@ cleanup () {
     fi
 }
 
-if [[ ! -v TOKEN ]]; then
-    echo "TOKEN environment variable must be set." >&2
+if [[ ! -v RUNNER_TOKEN ]]; then
+    echo "RUNNER_TOKEN environment variable must be set." >&2
     exit 1
 fi
 
@@ -45,8 +66,27 @@ if [[ -f /backup/system.nario ]]; then
   nix nario import --no-check-sigs < /backup/system.nario
 fi
 
-./config.sh --unattended --disableupdate --url "https://github.com/${REPO:-$ORG}" --token "$(get_token)" --labels nix
-./run.sh &
-wait $!
+pids=()
+token="$(get_token)"
+for i in {1..5}; do
+    useradd -m -s /bin/bash "runner$i"
+    cp -a /runner/. "/home/runner$i/"
+    chown -R "runner$i" "/home/runner$i/"
+    runuser -u "runner$i" -- bash -c "$(declare -f run); run ${token} ${RUNNER_REPO:-$RUNNER_ORG} ${i}" &
+    pids+=("$!")
+done
 
+for pid in "${pids[@]}"; do
+  wait "$pid"
+  # Capture the exit status of the process that just finished
+  exit_status=$? 
+
+  if [ $exit_status -ne 0 ]; then
+    echo "Process $pid failed with exit code $exit_status"
+  else
+    echo "Process $pid completed successfully"
+  fi
+done
+
+echo "All runners have completed."
 cleanup
