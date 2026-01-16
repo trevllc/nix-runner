@@ -34,6 +34,10 @@ RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems
         --extra-conf "sandbox = false" \
         --extra-conf "accept-flake-config = true" \
         --extra-conf "always-allow-substitutes = true" \
+        --extra-conf "trusted-users = @nix" \
+        --extra-conf "max-silent-time = 300" \
+        --extra-conf "fallback = true" \
+        --extra-conf "eval-cores = 0" \
         --no-start-daemon \
         --no-confirm && \
     rm ./nix-installer-x86_64-linux

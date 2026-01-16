@@ -4,6 +4,7 @@ set -e
 run () {
     cd || exit 1
     ./config.sh \
+        --replace \
         --unattended \
         --disableupdate \
         --token "${1}" \
@@ -75,10 +76,15 @@ if [[ -f /backup/system.nario ]]; then
   nix nario import --no-check-sigs < /backup/system.nario
 fi
 
+echo "Creating nix group..."
+groupadd nix
+
+echo "Starting runners..."
 pids=()
 token="$(get_token)"
 for i in {1..5}; do
     useradd -m -s /bin/bash "runner$i"
+    usermod -aG nix "runner$i"
     cp -a /runner/. "/home/runner$i/"
     chown -R "runner$i" "/home/runner$i/"
     runuser -u "runner$i" -- bash -c "$(declare -f run); run ${token} ${RUNNER_REPO:-$RUNNER_ORG} ${i}" &
