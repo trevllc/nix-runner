@@ -48,6 +48,10 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Docker Deps",
+      "matchManagers": ["custom.regex"]
     }
   ]
 }

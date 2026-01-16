@@ -35,4 +35,4 @@ jobs:
           arguments: ".#vulnerable"
 
       - name: Run octoscan
-        run: octoscan scan --verbose .github
+        run: octoscan scan .github
