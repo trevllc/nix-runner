@@ -59,13 +59,6 @@
             ];
           };
 
-          release = pkgs.mkShell {
-            packages = with pkgs; [
-              docker
-              docker-buildx
-            ];
-          };
-
           update = pkgs.mkShell {
             packages = with pkgs; [
               renovate

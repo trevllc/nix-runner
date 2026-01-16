@@ -3,8 +3,9 @@ ARG CURL_VERSION="8.5.0-2ubuntu10.6" # ubuntu/noble-updates/curl
 ARG GIT_VERSION="1:2.43.0-1ubuntu7.3" # ubuntu/noble-updates/git
 ARG JQ_VERSION="1.7.1-3ubuntu0.24.04.1" # ubuntu/noble-updates/jq
 ARG GH_VERSION="2.45.0-1ubuntu0.3" # ubuntu/noble-updates/gh
-ARG CERTIFICATES_VERSION="20240203" # ubuntu/noble/ca-certificates
-ARG INSTALLER_VERSION="3.15.1" # github-tags/DeterminateSystems/nix-installer&versioning=semver
+ARG CA_CERTIFICATES_VERSION="20240203" # ubuntu/noble/ca-certificates
+
+ARG NIX_INSTALLER_VERSION="3.15.1" # github-tags/DeterminateSystems/nix-installer&versioning=semver
 ARG RUNNER_VERSION="2.331.0" # github-tags/actions/runner&versioning=semver
 
 FROM ubuntu:24.04@sha256:7a398144c5a2fa7dbd9362e460779dc6659bd9b19df50f724250c62ca7812eb3
@@ -15,7 +16,7 @@ ARG CURL_VERSION
 ARG GIT_VERSION
 ARG JQ_VERSION
 ARG GH_VERSION
-ARG CERTIFICATES_VERSION
+ARG CA_CERTIFICATES_VERSION
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         systemd=${SYSTEMD_VERSION} \
@@ -23,12 +24,12 @@ RUN apt-get update && \
         git=${GIT_VERSION} \
         jq=${JQ_VERSION} \
         gh=${GH_VERSION} \
-        ca-certificates=${CERTIFICATES_VERSION} && \
+        ca-certificates=${CA_CERTIFICATES_VERSION} \
     rm -rf /var/lib/apt/lists/*
 
 # Nix
-ARG INSTALLER_VERSION
-RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems/nix-installer/releases/download/v${INSTALLER_VERSION}/nix-installer-x86_64-linux" && \
+ARG NIX_INSTALLER_VERSION
+RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems/nix-installer/releases/download/v${NIX_INSTALLER_VERSION}/nix-installer-x86_64-linux" && \
     chmod +x ./nix-installer-x86_64-linux && \
     ./nix-installer-x86_64-linux install linux \
         --extra-conf "sandbox = false" \

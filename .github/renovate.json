@@ -22,7 +22,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
-        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<suite>.*?)/(?<depName>.*?)\\s"
+        "ARG [A-Z_]+_VERSION=\"(?<currentValue>.*)\" # ubuntu/(?<suite>.*?)/(?<depName>.*?)\\s"
       ],
       "datasourceTemplate": "deb",
       "registryUrlTemplate": "https://archive.ubuntu.com/ubuntu?suite={{suite}}&components=main,universe&binaryArch=amd64"
@@ -31,7 +31,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
-        "ARG [A-Z]+_VERSION=\"(?<currentValue>.*)\" # github-tags/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s"
+        "ARG [A-Z_]+_VERSION=\"(?<currentValue>.*)\" # github-tags/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s"
       ],
       "datasourceTemplate": "github-tags"
     }

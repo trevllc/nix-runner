@@ -14,8 +14,6 @@ trap cleanup SIGTERM
 
 echo "Starting nix daemon..."
 nix-daemon &
-
-echo "Creating nix group..."
 groupadd -f nix
 
 if [[ -d /backup ]]; then
