@@ -16,7 +16,7 @@ echo "Starting nix daemon..."
 nix-daemon &
 
 echo "Creating nix group..."
-groupadd nix
+groupadd -f nix
 
 if [[ -d /backup ]]; then
     echo "Starting backup service..."

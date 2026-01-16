@@ -20,8 +20,11 @@ timer=$(/runner/timer 10m)
 newest=$(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n | tail -1)
 if [[ -f "${newest}" ]]; then
     echo "Restoring from latest backup: ${newest}..."
-    nix nario import --no-check-sigs < "${newest}"
-    echo "Restore complete."
+    if nix nario import --no-check-sigs < "${newest}"; then
+        echo "Restore complete."
+    else
+        echo "Restore failed."
+    fi
 fi
 
 echo "Waiting for backup ticks..."
@@ -34,11 +37,11 @@ while true; do
             break
         fi
 
-        if [[ $(find . | wc -l) -gt 5 ]]; then
+        while [ "$(find . | wc -l)" -gt 5 ]; do
             oldest=$(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n | head -1)
-            echo "Removing oldest backup: ${oldest}..."
+            echo "Removing oldest backup: ${oldest}"
             rm -f "${oldest}"
-        fi
+        done
     fi
 done &
 wait "$!"
