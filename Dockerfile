@@ -1,12 +1,8 @@
 ARG SYSTEMD_VERSION="255.4-1ubuntu8.12" # ubuntu/noble-updates/systemd
 ARG CURL_VERSION="8.5.0-2ubuntu10.6" # ubuntu/noble-updates/curl
 ARG GIT_VERSION="1:2.43.0-1ubuntu7.3" # ubuntu/noble-updates/git
-ARG JQ_VERSION="1.7.1-3ubuntu0.24.04.1" # ubuntu/noble-updates/jq
-ARG GH_VERSION="2.45.0-1ubuntu0.3" # ubuntu/noble-updates/gh
 ARG CA_CERTIFICATES_VERSION="20240203" # ubuntu/noble/ca-certificates
-
 ARG NIX_INSTALLER_VERSION="3.15.1" # github-tags/DeterminateSystems/nix-installer&versioning=semver
-ARG RUNNER_VERSION="2.331.0" # github-tags/actions/runner&versioning=semver
 
 FROM ubuntu:24.04@sha256:cd1dba651b3080c3686ecf4e3c4220f026b521fb76978881737d24f200828b2b
 
@@ -14,16 +10,12 @@ FROM ubuntu:24.04@sha256:cd1dba651b3080c3686ecf4e3c4220f026b521fb76978881737d24f
 ARG SYSTEMD_VERSION
 ARG CURL_VERSION
 ARG GIT_VERSION
-ARG JQ_VERSION
-ARG GH_VERSION
 ARG CA_CERTIFICATES_VERSION
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         systemd=${SYSTEMD_VERSION} \
         curl=${CURL_VERSION} \
         git=${GIT_VERSION} \
-        jq=${JQ_VERSION} \
-        gh=${GH_VERSION} \
         ca-certificates=${CA_CERTIFICATES_VERSION} && \
     rm -rf /var/lib/apt/lists/*
 
@@ -44,14 +36,17 @@ RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems
     rm ./nix-installer-x86_64-linux
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
 
-# Runner
-WORKDIR /runner
-ARG RUNNER_VERSION
-RUN curl -o actions-runner-x86_64-linux.tar.gz -L "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" && \
-    tar xzf ./actions-runner-x86_64-linux.tar.gz && \
-    ./bin/installdependencies.sh && \
-    rm ./actions-runner-x86_64-linux.tar.gz
+# Deps
+COPY ./flake.nix /runner/flake.nix
+RUN nix profile add --inputs-from /runner \
+    nixpkgs#github-runner \
+    nixpkgs#gitea-actions-runner \
+    nixpkgs#nodejs_24 \
+    nixpkgs#xz \
+    nixpkgs#gh \
+    nixpkgs#jq
 
+WORKDIR /runner
 COPY ./runner/timer.sh /runner/timer
 COPY ./runner/token.sh /runner/token
 COPY ./runner/run.sh /runner/run

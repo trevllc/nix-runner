@@ -7,6 +7,7 @@ services:
     environment:
       - ORG_TOKEN=${ORG_TOKEN}
       - REPO_TOKEN=${REPO_TOKEN}
-    command: ["trevllc", "spotdemo4/go-template"]
+      - GITEA_TOKEN=${GITEA_TOKEN}
+    command: ["spotdemo4/nix-flake-release"]
     restart: no
     stop_grace_period: 30s
