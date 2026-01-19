@@ -29,11 +29,7 @@ jobs:
         with:
           app-id: ${{ vars.RENOVATE_ID }}
           private-key: ${{ secrets.RENOVATE_KEY }}
-
-      - name: Nix develop
-        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
-        with:
-          arguments: ".#bump"
+          shell: bump
 
       - name: Bump
         run: bumper

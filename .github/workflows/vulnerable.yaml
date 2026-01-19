@@ -14,11 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: spotdemo4/better-checkout@47df133e9f043cd08660fed5a09b6c20232ce909 # v0.2.0
-
-      - name: Nix develop
-        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
         with:
-          arguments: ".#vulnerable"
+          shell: vulnerable
 
       - name: Run flake-checker
         run: flake-checker -f
@@ -28,11 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: spotdemo4/better-checkout@47df133e9f043cd08660fed5a09b6c20232ce909 # v0.2.0
-
-      - name: Nix develop
-        uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
         with:
-          arguments: ".#vulnerable"
+          shell: vulnerable
 
       - name: Run octoscan
         run: octoscan scan .github
