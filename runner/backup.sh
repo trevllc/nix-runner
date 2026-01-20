@@ -16,16 +16,7 @@ clean () {
     done
 }
 
-cleanup () {
-    echo "Shutting down backup service..."
-    backup
-    echo "exit" > "${timer}"
-    wait "${pid}"
-}
-
-trap cleanup SIGTERM
 cd /backup || exit 1
-timer=$(/runner/timer 10m)
 
 mapfile -t backups < <(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n)
 for backup in "${backups[@]}"; do
@@ -33,22 +24,16 @@ for backup in "${backups[@]}"; do
     if nix nario import --no-check-sigs < "${backup}"; then
         echo "Backup successfully restored."
         break
+    else
+        rm -f "${backup}"
+        echo "Failed to restore backup ${backup}, removed corrupted file."
     fi
 done
 
 clean
 
 while true; do
-    if read -r tick < "${timer}"; then
-        if [[ "${tick}" == "exit" ]]; then
-            rm -f "${timer}"
-            break
-        fi
-
-        backup
-        clean
-    fi
-done &
-pid=$!
-
-wait "${pid}"
+    sleep 10m
+    backup
+    clean
+done

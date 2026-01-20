@@ -8,6 +8,6 @@ services:
       - ORG_TOKEN=${ORG_TOKEN}
       - REPO_TOKEN=${REPO_TOKEN}
       - GITEA_TOKEN=${GITEA_TOKEN}
-    command: ["spotdemo4/nix-flake-release"]
+    command: ["https://github.com/spotdemo4/nix-flake-release"]
     restart: no
     stop_grace_period: 30s

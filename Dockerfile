@@ -44,10 +44,11 @@ RUN nix profile add --inputs-from /runner \
     nixpkgs#nodejs_24 \
     nixpkgs#xz \
     nixpkgs#gh \
-    nixpkgs#jq
+    nixpkgs#jq \
+    nixpkgs#jc && \
+    nix profile add --priority 10 --inputs-from /runner nixpkgs#forgejo-runner
 
 WORKDIR /runner
-COPY ./runner/timer.sh /runner/timer
 COPY ./runner/token.sh /runner/token
 COPY ./runner/run.sh /runner/run
 COPY ./runner/backup.sh /runner/backup
