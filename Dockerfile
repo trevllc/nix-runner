@@ -2,7 +2,7 @@ ARG SYSTEMD_VERSION="255.4-1ubuntu8.12" # ubuntu/noble-updates/systemd
 ARG CURL_VERSION="8.5.0-2ubuntu10.6" # ubuntu/noble-updates/curl
 ARG GIT_VERSION="1:2.43.0-1ubuntu7.3" # ubuntu/noble-updates/git
 ARG CA_CERTIFICATES_VERSION="20240203" # ubuntu/noble/ca-certificates
-ARG NIX_INSTALLER_VERSION="3.15.1" # github-tags/DeterminateSystems/nix-installer&versioning=semver
+ARG NIX_INSTALLER_VERSION="3.15.2" # github-tags/DeterminateSystems/nix-installer&versioning=semver
 
 FROM ubuntu:24.04@sha256:cd1dba651b3080c3686ecf4e3c4220f026b521fb76978881737d24f200828b2b
 
