@@ -41,6 +41,8 @@
       {
         devShells = {
           default = pkgs.mkShell {
+            name = "default";
+            shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
               # formatters
               nixfmt
@@ -50,22 +52,24 @@
               # util
               bumper
             ];
-            shellHook = pkgs.shellhook.ref;
           };
 
           bump = pkgs.mkShell {
+            name = "bump";
             packages = with pkgs; [
               bumper
             ];
           };
 
           update = pkgs.mkShell {
+            name = "update";
             packages = with pkgs; [
               renovate
             ];
           };
 
           vulnerable = pkgs.mkShell {
+            name = "vulnerable";
             packages = with pkgs; [
               # nix
               flake-checker
