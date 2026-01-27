@@ -41,7 +41,7 @@
       {
         devShells = {
           default = pkgs.mkShell {
-            name = "default";
+            name = "dev";
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
               # formatters
