@@ -31,6 +31,8 @@ RUN curl -o nix-installer-x86_64-linux -L "https://github.com/DeterminateSystems
         --extra-conf "max-silent-time = 300" \
         --extra-conf "fallback = true" \
         --extra-conf "eval-cores = 0" \
+        --extra-conf "min-free = 10737418240" \
+        --extra-conf "max-free = 21474836480" \
         --no-start-daemon \
         --no-confirm && \
     rm ./nix-installer-x86_64-linux

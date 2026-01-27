@@ -9,7 +9,7 @@ backup () {
 }
 
 clean () {
-    while [ "$(find . | wc -l)" -gt 3 ]; do
+    while [ "$(find . | wc -l)" -gt 2 ]; do
         oldest=$(find . -maxdepth 1 -name "*.nario" -printf "%f\n" | sort -t. -k1 -n | head -1)
         echo "Removing oldest backup: ${oldest}"
         rm -f "${oldest}"
